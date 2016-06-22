@@ -28,8 +28,6 @@ class SPEG_actions_visitor(object):
     def __init__(self, actions):
         self.actions = actions
     def visit(self, node):
-        if not node:
-            print 1
         if node.children:
             children = [self.visit(child) for child in node.children]
             node.children = children
