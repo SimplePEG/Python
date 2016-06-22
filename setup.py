@@ -8,7 +8,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(name='simplepeg',
-	version='1.0.1',
+	version='1.0.2',
 	description='Python version of SimplePEG',
 	long_description=readme(),
 	classifiers=[
