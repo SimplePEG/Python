@@ -1,5 +1,7 @@
 Python version of SimplePEG
 --------
+.. image:: https://travis-ci.org/SimplePEG/Python.svg?branch=master
+    :target: https://travis-ci.org/SimplePEG/Python
 
 To use, simply do::
 
