@@ -1,7 +1,9 @@
 Python version of SimplePEG
 --------
-.. image:: https://travis-ci.org/SimplePEG/Python.svg?branch=master :target: https://travis-ci.org/SimplePEG/Python
-.. image:: https://coveralls.io/repos/github/SimplePEG/Python/badge.svg?branch=master :target: https://coveralls.io/github/SimplePEG/Python?branch=master
+.. image:: https://travis-ci.org/SimplePEG/Python.svg?branch=master 
+	:target: https://travis-ci.org/SimplePEG/Python
+.. image:: https://coveralls.io/repos/github/SimplePEG/Python/badge.svg?branch=master 
+	:target: https://coveralls.io/github/SimplePEG/Python?branch=master
 
 To use, simply do::
 
