@@ -7,6 +7,6 @@ install:
   - pip install coveralls
 # command to run tests
 script:
-  coverage run --source=simplepeg setup.py test
+  coverage run --omit=*/test/* --source=simplepeg setup.py test
 after_success:
   coveralls
