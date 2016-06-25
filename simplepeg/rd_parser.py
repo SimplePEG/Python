@@ -1,15 +1,17 @@
-"""Recursince decend parser"""
+"""Recursive decent parser"""
 # pylint: disable=too-few-public-methods
 
 import json
 import re
+
 
 class State(object):
     """Current parser state"""
     text = ""
     position = 0
     rules = []
-    lastExpectations = []
+    last_expectations = []
+
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
@@ -17,11 +19,13 @@ class State(object):
         """returns json string"""
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=2)
 
+
 class Node(object):
     """Node of AST"""
     match = ""
     children = None
     action = None
+
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
@@ -32,6 +36,7 @@ class Node(object):
 
 class Expectation(object):
     """Expectation object"""
+
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
@@ -39,11 +44,12 @@ class Expectation(object):
         """returns json string"""
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=2)
 
-def getLastError(state):
-    if len(state.lastExpectations) < 1:
+
+def get_last_error(state):
+    if len(state.last_expectations) < 1:
         return False
     lines = state.text.split('\n')
-    last_exp_position = max([exp.position for exp in state.lastExpectations])
+    last_exp_position = max([exp.position for exp in state.last_expectations])
     last_position = 0
     line_of_error = ''
     error_line_number = None
@@ -51,7 +57,7 @@ def getLastError(state):
     i = 0
     while i < len(lines):
         line_lenght = len(lines[i]) + 1
-        if last_exp_position >= last_position and last_exp_position < last_position + line_lenght:
+        if last_position <= last_exp_position < last_position + line_lenght:
             line_of_error = lines[i]
             position_of_error = last_exp_position - last_position
             error_line_number = i + 1
@@ -64,15 +70,16 @@ def getLastError(state):
     if last_exp_position < len(state.text):
         unexpected_char = state.text[last_exp_position]
     unexpected = 'Unexpected "' + unexpected_char + '"'
-    expected_rules = [exp.rule for exp in state.lastExpectations]
+    expected_rules = [exp.rule for exp in state.last_expectations]
     expected = ' expected (' + ' or '.join(expected_rules) + ')'
     pointer = ('-'*(position_of_error + 2 + error_ln_length)) + '^'
     extra = line_of_error + '\n' + pointer
     return unexpected + expected + '\n' + str_error_ln + ': ' + extra
 
+
 def string(rule):
     def _(state):
-        state.lastExpectations = []
+        state.last_expectations = []
         if state.text[state.position:state.position+len(rule)] == rule:
             start_position = state.position
             state.position += len(rule)
@@ -83,7 +90,7 @@ def string(rule):
                 end_position=state.position
             )
         else:
-            state.lastExpectations = [Expectation(
+            state.last_expectations = [Expectation(
                 type='string',
                 rule=rule,
                 position=state.position
@@ -91,9 +98,10 @@ def string(rule):
             return False
     return _
 
+
 def regex_char(rule):
     def _(state):
-        state.lastExpectations = []
+        state.last_expectations = []
         match = re.match(rule, state.text[state.position:])
         if match and match.start() == 0:
             start_position = state.position
@@ -105,13 +113,14 @@ def regex_char(rule):
                 end_position=state.position
             )
         else:
-            state.lastExpectations = [Expectation(
+            state.last_expectations = [Expectation(
                 type='regex_char',
                 rule=rule,
                 position=state.position
             )]
             return False
     return _
+
 
 def sequence(parsers):
     def _(state):
@@ -135,6 +144,7 @@ def sequence(parsers):
         )
     return _
 
+
 def ordered_choice(parsers):
     def _(state):
         expectations = []
@@ -154,11 +164,12 @@ def ordered_choice(parsers):
             else:
                 state.text = initial_text
                 state.position = initial_position
-                expectations = expectations + state.lastExpectations
+                expectations = expectations + state.last_expectations
             i += 1
-        state.lastExpectations = expectations
+        state.last_expectations = expectations
         return False
     return _
+
 
 def zero_or_more(parser):
     def _(state):
@@ -172,7 +183,7 @@ def zero_or_more(parser):
                 asts.append(ast)
             else:
                 state.position = state_position
-        state.lastExpectations = []
+        state.last_expectations = []
         match = ''.join([(ast.match if ast.match is not None else '') for ast in asts])
         return Node(
             type='zero_or_more',
@@ -182,6 +193,7 @@ def zero_or_more(parser):
             end_position=state.position
         )
     return _
+
 
 def one_or_more(parser):
     def _(state):
@@ -196,7 +208,7 @@ def one_or_more(parser):
             else:
                 state.position = state_position
         if len(asts) > 0:
-            state.lastExpectations = []
+            state.last_expectations = []
             match = ''.join([(ast.match if ast.match is not None else '') for ast in asts])
             return Node(
                 type='one_or_more',
@@ -208,6 +220,7 @@ def one_or_more(parser):
         else:
             return False
     return _
+
 
 def optional(parser):
     def _(state):
@@ -226,6 +239,7 @@ def optional(parser):
             end_position=state.position
         )
     return _
+
 
 def and_predicate(parser):
     def _(state):
@@ -246,6 +260,7 @@ def and_predicate(parser):
             return False
     return _
 
+
 def not_predicate(parser):
     def _(state):
         current_text = state.text
@@ -254,14 +269,14 @@ def not_predicate(parser):
         if ast:
             state.text = current_text
             state.position = current_position
-            state.lastExpectations = [Expectation(
+            state.last_expectations = [Expectation(
                 type='not_predicate',
                 children=[ast],
                 position=state.position
             )]
             return False
         else:
-            state.lastExpectations = []
+            state.last_expectations = []
             return Node(
                 type='not_predicate',
                 match=None,
@@ -270,6 +285,7 @@ def not_predicate(parser):
                 end_position=state.position
             )
     return _
+
 
 def end_of_file():
     def _(state):
@@ -282,7 +298,7 @@ def end_of_file():
                 end_position=state.position
             )
         else:
-            state.lastExpectations = [Expectation(
+            state.last_expectations = [Expectation(
                 type='end_of_file',
                 rule='EOF',
                 position=state.position
@@ -290,8 +306,9 @@ def end_of_file():
             return False
     return _
 
+
 def rec(func):
-    """Allows you to do recurrcive currying"""
+    """Allows you to do recursive currying"""
     def _(*args, **kwargs):
         return func()(*args, **kwargs)
     return _
@@ -304,6 +321,7 @@ def action(name, func):
             ast.action = name
         return ast
     return _
+
 
 def call_rule_by_name(name):
     def _(state):
