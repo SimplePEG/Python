@@ -2,7 +2,7 @@ import os
 
 from unittest import TestCase
 
-from .. import simplepegparser as sp
+from .. import speg_parser as sp
 
 
 class TestSPEGParser(TestCase):

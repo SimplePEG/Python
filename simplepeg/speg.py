@@ -1,5 +1,5 @@
 from . import speg_visitor as sv
-from . import simplepegparser as sp
+from . import speg_parser as sp
 from . import rd_parser as rd
 
 
