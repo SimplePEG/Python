@@ -1,7 +1,7 @@
 from . import speg_visitor as sv
 from . import speg_parser as sp
 from . import rd_parser as rd
-
+from . import exceptions as ex
 
 class SPEG(object):
     def __init__(self):
@@ -15,7 +15,7 @@ class SPEG(object):
         if speg_ast:
             self.speg_parser = self.visitor.visit(speg_ast)
         else:
-            raise Exception('Failed to parse grammar: \n\n' + self.parser.get_last_error())
+            raise ex.GrammarParseError('Failed to parse grammar: \n\n' + self.parser.get_last_error())
 
     def parse_text(self, text):
         if self.speg_parser:
@@ -27,7 +27,7 @@ class SPEG(object):
             if ast:
                 return ast
             else:
-                raise Exception('Failed to parse text: \n\n' + rd.get_last_error(state))
+                raise ex.TextParseError('Failed to parse text: \n\n' + rd.get_last_error(state))
         else:
             raise Exception('You need grammar to parse text. Call parseGrammar first')
 
@@ -44,9 +44,9 @@ class SPEG(object):
             if ast:
                 return ast
             else:
-                raise Exception('Failed to parse text: \n\n' + rd.get_last_error(state))
+                raise ex.TextParseError('Failed to parse text: \n\n' + rd.get_last_error(state))
         else:
-            raise Exception('Failed to parse grammar: \n\n' + self.parser.get_last_error())
+            raise ex.GrammarParseError('Failed to parse grammar: \n\n' + self.parser.get_last_error())
 
 
 class SimplePegActions(object):
