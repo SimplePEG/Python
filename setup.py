@@ -36,7 +36,7 @@ class Tox(TestCommand):
 
 
 setup(name='simplepeg',
-      version='1.0.3',
+      version='1.0.4',
       description='Python version of SimplePEG',
       long_description=readme(),
       classifiers=[
