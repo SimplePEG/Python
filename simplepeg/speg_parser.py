@@ -3,6 +3,7 @@ from . import rd_parser as rd
 
 def peg():
     return rd.action('peg', rd.sequence([
+        rd.zero_or_more(_()),
         parsing_header(),
         rd.one_or_more(_()),
         parsing_body(),

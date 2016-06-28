@@ -54,7 +54,7 @@ class SimplePegActions(object):
         return node
 
     def peg(self, node):
-        return node.children[2]
+        return node.children[3]
 
     def parsing_body(self, node):
         node.children = [child.children[0] for child in node.children]
