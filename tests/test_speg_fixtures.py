@@ -1,28 +1,20 @@
-import os
 from os import path as op
 
+import pytest
+
 from simplepeg.speg import SPEG
+from utils import collect_files, read_file
 
 FIXTURES_ROOT = op.join(op.dirname(__file__), 'speg_fixtures')
 
 
-def test_speg():
-    grammar_path = op.join(FIXTURES_ROOT, 'grammar')
-    text_path = op.join(FIXTURES_ROOT, 'text')
-    result_path = op.join(FIXTURES_ROOT, 'result')
-
-    file_names = []
-    for (_, _, filenames) in os.walk(grammar_path):
-        file_names.extend(filenames)
-
-    for file_name in file_names:
-        gfn = op.join(grammar_path, file_name)
-        tfn = op.join(text_path, file_name + '.txt')
-        rfn = op.join(result_path, file_name + '.json')
-        with open(gfn, 'r') as g_file, open(tfn, 'r') as t_file, open(rfn, 'r') as r_file:
-            grammar_content = g_file.read()
-            text_content = t_file.read()
-            result_content = r_file.read()
-            speg = SPEG()
-            ast = speg.parse(grammar_content, text_content)
-            assert ast.to_json() == result_content
+@pytest.mark.parametrize(
+    'grammar_file',
+    collect_files(FIXTURES_ROOT, lambda f: f.endswith('.peg')))
+def test_speg(grammar_file):
+    grammar, text, result = [
+        read_file(grammar_file + postfix)
+        for postfix in ('', '.txt', '.json')]
+    speg = SPEG()
+    ast = speg.parse(grammar, text)
+    assert ast.to_json() == result
