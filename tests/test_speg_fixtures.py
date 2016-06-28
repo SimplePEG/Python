@@ -1,4 +1,5 @@
 from os import path as op
+import json
 
 import pytest
 
@@ -17,4 +18,4 @@ def test_speg(grammar_file):
         for postfix in ('', '.txt', '.json')]
     speg = SPEG()
     ast = speg.parse(grammar, text)
-    assert ast.to_json() == result
+    assert json.loads(ast.to_json()) == json.loads(result)
