@@ -7,15 +7,34 @@ Python version of SimplePEG
 
 To use, simply do::
 
-    >>> from simplepeg import SPEG
-    >>> parser = SPEG()
-    >>> parser.parse_grammar('GRAMMAR test b -> "a";')
-    >>> ast = parser.parse_text('a')
-    >>> print ast.to_json()
+.. code-block:: python
+    from simplepeg import SPEG
+    parser = SPEG()
+    parser.parse_grammar('GRAMMAR test b -> "a";')
+    ast = parser.parse_text('a')
+    print ast.to_json()
 
 or::
+.. code-block:: python
+    from simplepeg import SPEG
+    parser = SPEG()
+    ast = parser.parse('GRAMMAR test b -> "a";', 'a')
+    print ast.to_json()
 
-    >>> from simplepeg import SPEG
-    >>> parser = SPEG()
-    >>> ast = parser.parse('GRAMMAR test b -> "a";', 'a')
-    >>> print ast.to_json()
+Grammar Example
+-------------------------------
+url.peg
+
+.. code-block::
+
+    GRAMMAR url
+
+    url       ->  scheme "://" host pathname search hash?;
+    scheme    ->  "http" "s"?;
+    host      ->  hostname port?;
+    hostname  ->  segment ("." segment)*;
+    segment   ->  [a-z0-9-]+;
+    port      ->  ":" [0-9]+;
+    pathname  ->  "/" [^ ?]*;
+    search    ->  ("?" [^ #]*)?;
+    hash      ->  "#" [^ ]*;
