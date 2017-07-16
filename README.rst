@@ -5,7 +5,7 @@ Python version of SimplePEG
 .. image:: https://coveralls.io/repos/github/SimplePEG/Python/badge.svg?branch=master 
     :target: https://coveralls.io/github/SimplePEG/Python?branch=master
 
-To use, simply do:
+To use, simply do
 
 .. code-block:: python
 
@@ -15,9 +15,10 @@ To use, simply do:
     ast = parser.parse_text('a')
     print ast.to_json()
 
-or:
+or
 
 .. code-block:: python
+
     from simplepeg import SPEG
     parser = SPEG()
     ast = parser.parse('GRAMMAR test b -> "a";', 'a')
