@@ -1,5 +1,9 @@
 Python version of SimplePEG
 ---------------------------
+
+.. image:: https://badges.gitter.im/SimplePEG/Python.svg
+   :alt: Join the chat at https://gitter.im/SimplePEG/Python
+   :target: https://gitter.im/SimplePEG/Python?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 .. image:: https://travis-ci.org/SimplePEG/Python.svg?branch=master 
     :target: https://travis-ci.org/SimplePEG/Python
 .. image:: https://coveralls.io/repos/github/SimplePEG/Python/badge.svg?branch=master 
