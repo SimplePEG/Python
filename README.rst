@@ -1,6 +1,8 @@
 Python version of SimplePEG
 ---------------------------
 
+A very simple implementation of `PEG <https://en.wikipedia.org/wiki/Parsing_expression_grammar>`_ parser generator.
+
 .. image:: https://badges.gitter.im/SimplePEG/Python.svg
    :alt: Join the chat at https://gitter.im/SimplePEG/Python
    :target: https://gitter.im/SimplePEG/Python?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
